@@ -1,0 +1,130 @@
+use master
+
+create database Advokati
+
+use Advokati
+
+
+create table Dim_Status_Placanja
+(
+ID int identity(1,1),
+naziv nvarchar(20)
+constraint PK_ID primary key (ID)
+)
+
+create table Dim_Vrsta_Placanja(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID1 primary key(ID)
+)
+
+create table Dim_Saradnik(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID2 primary key(ID)
+)
+
+create table Dim_Predmet(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID3 primary key(ID)
+)
+
+alter table Dim_Predmet 
+add ID_Aktivan int
+
+alter table Dim_Predmet
+add constraint FK_Dim_Predmet foreign key (ID_Aktivan) references Dim_Aktivan(ID)
+
+
+create table Dim_Klijent(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID4 primary key(ID)
+)
+
+create table Dim_Aktivan(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID5 primary key(ID)
+)
+
+create table Dim_Valuta(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID7 primary key(ID)
+)
+
+create table Dim_Status(
+ID int identity(1,1),
+naziv nvarchar(20),
+constraint PK_ID6 primary key(ID)
+)
+
+create table Dim_Advokat(
+ID int identity(1,1),
+Ime nvarchar(20),
+Prezime nvarchar(20)
+constraint PK_ID8 primary key(ID)
+)
+
+create table Dim_Datum(
+ID int identity(1,1),
+Mesec int,
+Godina int
+constraint PK_ID9 primary key(ID)
+)
+
+create table Fact_Debit
+(
+ID int identity(1,1),
+Minutaza float,
+Cena float,
+Trosak float,
+Ukupno float,
+ID_Dim_Advokat int,
+ID_Dim_Aktivan int,
+ID_Dim_Klijent int,
+ID_Dim_Predmet int,
+ID_Dim_Saradnik int,
+ID_Dim_Status int,
+ID_Dim_Status_Placanja int,
+ID_Dim_Valuta int,
+ID_Dim_Vrsta_Placanja int,
+ID_Dim_Datum_Aktivnosti int,
+ID_Dim_Datum_Predmeta int,
+ID_Dim_Datum_Troska int,
+ID_Dim_Datum_Uplate int,
+constraint PK_ID11 primary key (ID),
+constraint FK_Debit_Advokat foreign key (ID_Dim_Advokat) references [dbo].[Dim_Advokat](ID),
+constraint FK_Debit_Klijent foreign key (ID_Dim_Klijent) references [dbo].[Dim_Klijent](ID),
+constraint FK_Debit_Predmet foreign key (ID_Dim_Predmet) references [dbo].[Dim_Predmet](ID),
+constraint FK_Debit_Saradnik foreign key (ID_Dim_Saradnik) references [dbo].[Dim_Saradnik](ID),
+constraint FK_Debit_Status foreign key (ID_Dim_Status) references [dbo].[Dim_Status](ID),
+constraint FK_Debit_Status_Placanja foreign key (ID_Dim_Status_Placanja) references [dbo].[Dim_Status_Placanja](ID),
+constraint FK_Debit_Valuta foreign key (ID_Dim_Valuta) references [dbo].[Dim_Valuta](ID),
+constraint FK_Dim_Vrsta_Placanja foreign key (ID_Dim_Vrsta_Placanja) references [dbo].[Dim_Vrsta_Placanja](ID),
+constraint FK_Dim_Datum_Aktivnosti foreign key (ID_Dim_Datum_Aktivnosti) references Dim_Datum(ID),
+constraint FK_Dim_Datum_Predmeta foreign key (ID_Dim_Datum_Predmeta) references Dim_Datum(ID),
+constraint FK_Dim_Datum_Troskova foreign key (ID_Dim_Datum_Troska) references Dim_Datum(ID),
+constraint FK_Dim_Datum_Uplate foreign key (ID_Dim_Datum_Uplate) references Dim_Datum(ID),
+)
+
+create table Fact_Ucinak
+(
+ID int identity(1,1),
+Minutaza float,
+Cena float,
+ID_Dim_Datum_Racuna int,
+ID_Dim_Advokat int,
+ID_Dim_Status int,
+ID_Dim_Saradnik int,
+ID_Dim_Predmet int,
+ID_Dim_Klijent int,
+constraint FK_Ucinak_Advokat foreign key (ID_Dim_Advokat) references [dbo].[Dim_Advokat](ID),
+constraint FK_Ucinak_Klijent foreign key (ID_Dim_Klijent) references [dbo].[Dim_Klijent](ID),
+constraint FK_Ucinak_Predmet foreign key (ID_Dim_Predmet) references [dbo].[Dim_Predmet](ID),
+constraint FK_Ucinak_Saradnik foreign key (ID_Dim_Saradnik) references [dbo].[Dim_Saradnik](ID),
+constraint FK_Ucinak_Status foreign key (ID_Dim_Status) references [dbo].[Dim_Status](ID),
+constraint FK_Ucinak_Datum_Racuna foreign key (ID_Dim_Datum_Racuna) references Dim_Datum(ID)
+)
